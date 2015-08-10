@@ -30,10 +30,10 @@ public class Helper {
 							collection.set(insertAt, item);
 						}
 						collection.remove(ind);
+						collection.add(i);
 					} else {
 						collection.set(insertAt, item);
 					}
-					collection.add(i);
 				}
 				insertAt++;
 			}

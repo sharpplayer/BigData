@@ -55,6 +55,7 @@ public class HibernateConfiguration {
 	}
 
 	private Properties hibernateProperties() {
+
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect",
 				environment.getRequiredProperty("hibernate.dialect"));
@@ -62,13 +63,10 @@ public class HibernateConfiguration {
 				environment.getRequiredProperty("hibernate.show_sql"));
 		properties.put("hibernate.format_sql",
 				environment.getRequiredProperty("hibernate.format_sql"));
-		/*
-		 * properties .put("hibernate.current_session_context_class",
-		 * environment
-		 * .getRequiredProperty("hibernate.current_session_context_class"));
-		 */
 		properties.put("hibernate.hbm2ddl.auto",
 				environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+		properties.put("hibernate.hbm2ddl.import_files",
+				environment.getRequiredProperty("hibernate.hbm2ddl.import_files"));
 		return properties;
 	}
 

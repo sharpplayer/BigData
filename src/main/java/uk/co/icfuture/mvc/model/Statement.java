@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import uk.co.icfuture.mvc.utils.Helper;
@@ -33,13 +34,17 @@ public class Statement {
 
 	@NotEmpty
 	@Column(unique = true)
-	private String statement;
+	private String statement = "";
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Meta> meta = new HashSet<Meta>();
 
 	public Statement() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Statement(String s) {
+		this.statement = s;
 	}
 
 	public Statement(int id, String statement, String[] meta) {
@@ -84,6 +89,9 @@ public class Statement {
 				metas.add(m);
 			}
 		}
+		if (this.meta.size() == 0) {
+			Hibernate.initialize(this.getMeta());
+		}
 		Helper.mergeCollection(this.meta, metas, true);
 	}
 
@@ -98,5 +106,10 @@ public class Statement {
 
 		});
 		return Joiner.on(",").join(clone);
+	}
+
+	@Transient
+	public boolean isEmpty() {
+		return getStatement().isEmpty();
 	}
 }

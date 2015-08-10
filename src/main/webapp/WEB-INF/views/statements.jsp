@@ -7,7 +7,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Statements Form</title>
+<title>Statements Management</title>
 
 <style>
 .error {
@@ -21,12 +21,12 @@
 
 	<c:set var="buttonText">Add</c:set>
 	<c:set var="actionText">
-		<c:url value='/html/statements' />
+		<c:url value='/admin/statements' />
 	</c:set>
 	<c:if test="${statementForm.object.id != 0}">
 		<c:set var="buttonText">Update</c:set>
 		<c:set var="actionText">
-			<c:url value='/html/statements/${statementForm.object.id}' />
+			<c:url value='/admin/statements/${statementForm.object.id}' />
 		</c:set>
 	</c:if>
 	<h2>Statement Form</h2>
@@ -73,12 +73,12 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td><a href="<c:url value='/html/statements' />">New</a></td>
+			<td><a href="<c:url value='/admin/statements' />">New</a></td>
 		</tr>
 		<c:forEach items="${statements}" var="item">
 			<tr>
 				<td>${item.id}</td>
-				<td><a href="<c:url value='/html/statements/${item.id}' />">${item.statement}</a></td>
+				<td><a href="<c:url value='/admin/statements/${item.id}' />">${item.statement}</a></td>
 			</tr>
 		</c:forEach>
 	</table>

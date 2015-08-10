@@ -4,4 +4,7 @@ public interface Filter {
 	public String getFilterText();
 
 	public boolean isEmpty();
+	
+	public void setFilterText(String text);
+
 }

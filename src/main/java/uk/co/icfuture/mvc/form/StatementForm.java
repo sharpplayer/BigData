@@ -12,5 +12,4 @@ public class StatementForm extends FilterForm<Statement, StatementFilter> {
 	public StatementForm(Statement object, StatementFilter filter) {
 		super(object, filter);
 	}
-
 }

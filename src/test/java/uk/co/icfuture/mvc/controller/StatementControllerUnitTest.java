@@ -2,6 +2,7 @@ package uk.co.icfuture.mvc.controller;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -22,8 +23,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import uk.co.icfuture.mvc.form.filter.StatementFilter;
 import uk.co.icfuture.mvc.model.Statement;
@@ -31,8 +30,8 @@ import uk.co.icfuture.mvc.service.StatementService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml")
-public class AppControllerTest {
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context-test.xml")
+public class StatementControllerUnitTest extends BaseUnitTest {
 
 	private MockMvc mockMvc;
 
@@ -46,12 +45,8 @@ public class AppControllerTest {
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		InternalResourceViewResolver vr = new InternalResourceViewResolver();
-		vr.setPrefix("/WEB-INF/views");
-		vr.setSuffix(".jsp");
-		mockMvc = MockMvcBuilders
-				.standaloneSetup(new AppController(mockStatementService))
-				.setViewResolvers(vr).build();
+		mockMvc = super
+				.getMockMvc(new StatementController(mockStatementService));
 		statement1 = new Statement(1, "statement1", new String[] { "one",
 				"uno", "1" });
 		statement2 = new Statement(2, "statement2", new String[] { "two",
@@ -59,22 +54,27 @@ public class AppControllerTest {
 	}
 
 	@Test
-	public void testIndexAction() throws Exception {
-		mockMvc.perform(get("/")).andExpect(status().isOk())
-				.andExpect(view().name("home"));
-	}
-
-	@Test
 	public void testStatementsAction() throws Exception {
 		when(mockStatementService.getStatements(any(StatementFilter.class)))
 				.thenReturn(Arrays.asList(statement1, statement2));
-		when(mockStatementService.getStatement(0))
-		.thenReturn(new Statement());
+		when(mockStatementService.getStatement(0)).thenReturn(new Statement());
 		mockMvc.perform(get("/html/statements")).andExpect(status().isOk())
 				.andExpect(view().name("statements"))
 				.andExpect(model().attributeExists("statementForm"));
-		verify(mockStatementService, times(1)).getStatements(any(StatementFilter.class));
+		verify(mockStatementService, times(1)).getStatements(
+				any(StatementFilter.class));
 		verify(mockStatementService, times(1)).getStatement(0);
+		verifyNoMoreInteractions(mockStatementService);
+	}
+
+	@Test
+	public void testStatementsActionInvalidId() throws Exception {
+		when(mockStatementService.getStatement(0)).thenReturn(new Statement());
+		when(mockStatementService.getStatement(100)).thenReturn(null);
+		mockMvc.perform(get("/html/statements/100")).andExpect(
+				status().isNotFound());
+		verify(mockStatementService, times(0)).getStatement(0);
+		verify(mockStatementService, times(1)).getStatement(100);
 		verifyNoMoreInteractions(mockStatementService);
 	}
 

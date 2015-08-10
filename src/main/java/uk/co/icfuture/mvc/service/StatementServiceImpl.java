@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.icfuture.mvc.dao.MetaDao;
 import uk.co.icfuture.mvc.dao.StatementDao;
+import uk.co.icfuture.mvc.exception.ItemNotFoundException;
 import uk.co.icfuture.mvc.form.filter.StatementFilter;
 import uk.co.icfuture.mvc.model.Statement;
 
@@ -35,15 +36,15 @@ public class StatementServiceImpl implements StatementService {
 		}
 	}
 
-	public Statement getStatement(int id) {
+	public Statement getStatement(int id) throws ItemNotFoundException {
 		if (id == 0) {
 			return new Statement();
 		} else {
-			try {
-				Statement statement = statementDao.getStatement(id);
+			Statement statement = statementDao.getStatement(id);
+			if (statement == null) {
+				throw new ItemNotFoundException("statement", id);
+			} else {
 				return statement;
-			} catch (Exception ex) {
-				return new Statement();
 			}
 		}
 	}

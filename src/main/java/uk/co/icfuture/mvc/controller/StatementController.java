@@ -14,49 +14,46 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
+import uk.co.icfuture.mvc.exception.ItemNotFoundException;
 import uk.co.icfuture.mvc.form.StatementForm;
 import uk.co.icfuture.mvc.form.filter.StatementFilter;
 import uk.co.icfuture.mvc.model.Statement;
 import uk.co.icfuture.mvc.service.StatementService;
 
 @Controller
-@RequestMapping("/")
-@SessionAttributes("myFilter")
-public class AppController {
+@SessionAttributes("statementFilter")
+public class StatementController {
 
 	private final StatementService statementService;
 
 	@Autowired
-	public AppController(StatementService statementService) {
+	public StatementController(StatementService statementService) {
 		this.statementService = statementService;
 	}
 
-	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
-	public String indexAction(ModelMap model) {
-		return "home";
-	}
-
-	@RequestMapping(value = { "/html/statements" }, method = RequestMethod.GET)
-	public String statementsAction(ModelMap model) {
+	@RequestMapping(value = { "/admin/statements" }, method = RequestMethod.GET)
+	public String statementsAction(ModelMap model) throws ItemNotFoundException {
 		return statementsAction(0, model);
 	}
 
-	@RequestMapping(value = { "/html/statements/{id}" }, method = RequestMethod.GET)
-	public String statementsAction(@PathVariable("id") int id, ModelMap model) {
-		populateStatementModel(id, null, model);
+	@RequestMapping(value = { "/admin/statements/{id}" }, method = RequestMethod.GET)
+	public String statementsAction(@PathVariable("id") int id, ModelMap model)
+			throws ItemNotFoundException {
+		populateStatementModel(statementService.getStatement(id), null, model,
+				null);
 		return "statements";
 	}
 
-	@RequestMapping(value = { "/html/statements" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/admin/statements" }, method = RequestMethod.POST)
 	public String statementsPostAction(
 			@RequestParam(value = "filter", required = false) String filter,
 			@Valid StatementForm statementForm, BindingResult resultStatement,
-			RedirectAttributes model) {
+			ModelMap model, RedirectAttributes redirectAtts) {
 
 		Statement statement = statementForm.getObject();
-		if (shouldSaveStatement(statement, filter != null, true)) {
+		boolean save = shouldSaveStatement(statement, filter != null, true);
+		if (save) {
 			if (resultStatement.hasErrors()) {
 				return "statements";
 			}
@@ -64,70 +61,61 @@ public class AppController {
 					.getObject());
 		}
 
-		if (model instanceof ModelMap) {
-			populateStatementModel(statement, statementForm.getFilter(),
-					(ModelMap) model);
+		populateStatementModel(statement, statementForm, (ModelMap) model,
+				save ? redirectAtts : null);
+
+		if (save) {
+			redirectAtts.addAttribute("id", statement.getId());
+			return "redirect:/admin/statements/{id}";
+		} else {
+			return "statements";
 		}
-
-		model.addAttribute("id", statement.getId());
-
-		return "redirect:/html/statements/{id}";
 
 	}
 
-	@RequestMapping(value = { "/html/statements/{id}" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/admin/statements/{id}" }, method = RequestMethod.POST)
 	public String statementsPostAction(@PathVariable("id") int id,
 			@RequestParam(value = "filter", required = false) String filter,
 			@Valid StatementForm statementForm, BindingResult resultStatement,
 			ModelMap model) {
 
 		Statement statement = statementForm.getObject();
-		if (shouldSaveStatement(statement, filter != null, id != 0)) {
+		if (shouldSaveStatement(statement, filter != null, id == 0)) {
 			if (resultStatement.hasErrors()) {
 				return "statements";
 			}
 			statement = statementService.saveStatementWithId(statement, id);
 		}
 
-		populateStatementModel(statement, statementForm.getFilter(), model);
+		populateStatementModel(statement, statementForm, model, null);
 
 		return "statements";
 	}
 
-	private void populateStatementModel(int id, StatementFilter filter,
-			ModelMap model) {
-		populateStatementModel(statementService.getStatement(id), filter, model);
-	}
-
 	private void populateStatementModel(Statement statement,
-			StatementFilter filter, ModelMap model) {
-		if (filter == null) {
-			if (model.containsAttribute("myFilter")) {
-				filter = (StatementFilter) model.get("myFilter");
-				System.out.println("Filter from model:"
-						+ filter.getFilterText() + ":");
+			StatementForm form, ModelMap model, RedirectAttributes redirect) {
+		StatementFilter filter = null;
+		if (form == null) {
+			form = new StatementForm(statement, new StatementFilter());
+			if (model.containsAttribute("statementFilter")) {
+				filter = (StatementFilter) model.get("statementFilter");
 			} else {
-				System.out.println("New filter");
-				filter = new StatementFilter();
+				filter = form.getFilter();
 			}
 		} else {
-			System.out.println("Filter received:" + filter.getFilterText()
-					+ ":");
+			filter = form.getFilter();
+			form.setObject(statement);
 		}
 
 		List<Statement> statements = statementService.getStatements(filter);
-		if (model instanceof RedirectAttributes) {
-			RedirectAttributes ra = (RedirectAttributes) model;
-			ra.addFlashAttribute("myFilter", filter);
-			ra.addFlashAttribute("statementForm", new StatementForm(statement,
-					filter));
-			ra.addFlashAttribute("statements", statements);
-		} else {
-			model.addAttribute("myFilter", filter);
-			model.addAttribute("statementForm", new StatementForm(statement,
-					filter));
-			model.addAttribute("statements", statements);
+		if (redirect != null) {
+			redirect.addFlashAttribute("statementFilter", filter);
 		}
+
+		model.addAttribute("statementFilter", filter);
+		model.addAttribute("statementForm", form);
+		model.addAttribute("statements", statements);
+
 	}
 
 	private boolean shouldSaveStatement(Statement statement, boolean filter,

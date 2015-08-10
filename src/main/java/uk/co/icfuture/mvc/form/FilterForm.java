@@ -17,10 +17,14 @@ public class FilterForm<T, U extends Filter> {
 	}
 
 	public T getObject() {
-		return object;
+		return this.object;
+	}
+
+	public void setObject(T obj) {
+		this.object = obj;
 	}
 
 	public U getFilter() {
-		return filter;
+		return this.filter;
 	}
 }

@@ -38,7 +38,7 @@ public abstract class AbstractDao<T> {
 		return this.entityManager.merge(entity);
 	}
 
-	public void delete(Object entity) {
+	public void delete(T entity) {
 		this.entityManager.remove(entity);
 	}
 
@@ -68,5 +68,9 @@ public abstract class AbstractDao<T> {
 		TypedQuery<T> tq = this.entityManager.createQuery(query);
 		tq.setParameter("param", value);
 		return tq.getResultList();
+	}
+
+	public T getItemById(int id) {
+		return this.entityManager.find(this.genericClass, id);
 	}
 }
