@@ -8,7 +8,6 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import uk.co.icfuture.mvc.exception.ItemNotFoundException;
-import uk.co.icfuture.mvc.form.filter.QuestionFilter;
 import uk.co.icfuture.mvc.model.Question;
 
 @Repository("questionDao")
@@ -16,22 +15,26 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements
 		QuestionDao {
 
 	public Question saveQuestion(Question question) {
-		if (question.getId() == 0) {
+		if (question.getQuestionId() == 0) {
 			return persist(question);
 		} else {
 			return update(question);
 		}
 	}
 
-	public List<Question> getQuestions(QuestionFilter filter) {
+	public List<Question> getQuestionsByStatement(String filter) {
 		TypedQuery<Question> tq = getEntityManager()
 				.createQuery(
-						"select distinct q from Question q join q.statements s where s.statement like :text",
-						Question.class).setParameter("text",
-						"%" + filter.getFilterText() + "%");
+						"select distinct q from Question q join q.questionStatements s where s.pk.statement.statement like :text",
+						Question.class)
+				.setParameter("text", "%" + filter + "%");
 
 		return tq.getResultList();
 
+	}
+
+	public List<Question> getQuestions(String descriptionFilter) {
+		return getFilteredList("description", "%" + descriptionFilter + "%");
 	}
 
 	public Question getQuestion(int id) {
@@ -44,7 +47,7 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements
 		ArrayList<Question> ret = new ArrayList<Question>();
 		int index = 0;
 		for (Question m : questions) {
-			if (m.getId() == 0) {
+			if (m.getQuestionId() == 0) {
 				TypedQuery<Question> tq = getEntityManager()
 						.createQuery(
 								"select distinct q from Question q join q.statements s where s.statement = :text",

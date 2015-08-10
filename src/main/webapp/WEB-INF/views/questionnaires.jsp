@@ -73,6 +73,14 @@
 			</tr>
 			<tr>
 				<td></td>
+				<td><label for="filterTextQD">Question Description Filter: </label></td>
+				<td><form:input path="filter.questionFilter.descriptionFilterText"
+						id="filterTextQD" /></td>
+				<td><form:errors path="filter.questionFilter.descriptionFilterText"
+						cssClass="error" /></td>
+			</tr>
+			<tr>
+				<td></td>
 				<td><label for="filterTextQn">Question Filter: </label></td>
 				<td><form:input path="filter.questionFilter.filterText"
 						id="filterTextQn" /></td>
@@ -100,9 +108,9 @@
 			</tr>
 			<c:forEach items="${questionnaires}" var="item">
 				<tr>
-					<td>${item.id}</td>
+					<td>${item.questionnaireId}</td>
 					<td><a
-						href="<c:url value='/admin/questionnaires/${item.id}' />">${item.description}</a></td>
+						href="<c:url value='/admin/questionnaires/${item.questionnaireId}' />">${item.description}</a></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -112,7 +120,7 @@
 		<table>
 			<tr>
 				<td></td>
-				<td>Statement</td>
+				<td>Question</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -120,9 +128,10 @@
 			</tr>
 			<c:forEach items="${questions}" var="item">
 				<tr>
-					<td>${item.id}</td>
-					<td><a href="<c:url value='/admin/questions/${item.id}' />">${item.question}</a></td>
-					<td><input type="submit" name="insert${item.id}"
+					<td>${item.questionId}</td>
+					<td><a href="<c:url value='/admin/questions/${item.questionId}' />">${item.description}</a></td>
+					<td>${item.question}</td>
+					<td><input type="submit" name="insert${item.questionId}"
 						value="Insert" /></td>
 				</tr>
 			</c:forEach>

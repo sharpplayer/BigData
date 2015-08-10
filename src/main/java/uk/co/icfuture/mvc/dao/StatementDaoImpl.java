@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import uk.co.icfuture.mvc.exception.ItemNotFoundException;
-import uk.co.icfuture.mvc.form.filter.StatementFilter;
+import uk.co.icfuture.mvc.model.QuestionStatement;
 import uk.co.icfuture.mvc.model.Statement;
 
 @Repository("statementDao")
@@ -14,37 +14,41 @@ public class StatementDaoImpl extends AbstractDao<Statement> implements
 		StatementDao {
 
 	public Statement saveStatement(Statement statement) {
-		if (statement.getId() == 0) {
+		if (statement.getStatementId() == 0) {
 			return persist(statement);
 		} else {
 			return update(statement);
 		}
 	}
 
-	public List<Statement> getStatements(StatementFilter filter) {
-		return getFilteredList("statement", "%" + filter.getFilterText() + "%");
+	public List<Statement> getStatements(String filter) {
+		return getFilteredList("statement", "%" + filter + "%");
 	}
 
 	public Statement getStatement(int id) {
 		return getItemById(id);
 	}
 
-	public List<Statement> findStatements(List<Statement> statements,
-			boolean persistNew) throws ItemNotFoundException {
-		ArrayList<Statement> ret = new ArrayList<Statement>();
+	public List<QuestionStatement> findStatements(
+			List<QuestionStatement> statements, boolean persistNew)
+			throws ItemNotFoundException {
+		ArrayList<QuestionStatement> ret = new ArrayList<QuestionStatement>();
 		int index = 0;
-		for (Statement m : statements) {
-			if (m.getId() == 0) {
-				List<Statement> l = getList("statement", m.getStatement());
+		for (QuestionStatement m : statements) {
+			if (m.getStatement().getStatementId() == 0) {
+				List<Statement> l = getList("statement", m.getStatement()
+						.getStatement());
 				if (l.size() == 0) {
 					if (persistNew) {
-						ret.add(persist(m));
+						m.setStatement(persist(m.getStatement()));
+						ret.add(m);
 					} else {
-						throw new ItemNotFoundException("statement",
-								m.getStatement(), index);
+						throw new ItemNotFoundException("statement", m
+								.getStatement().getStatement(), index);
 					}
 				} else {
-					ret.add(l.get(0));
+					m.setStatement(l.get(0));
+					ret.add(m);
 				}
 			} else {
 				ret.add(m);

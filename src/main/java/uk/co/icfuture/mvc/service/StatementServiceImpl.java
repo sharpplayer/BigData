@@ -3,6 +3,7 @@ package uk.co.icfuture.mvc.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,7 @@ public class StatementServiceImpl implements StatementService {
 		if (filter.isEmpty()) {
 			return new ArrayList<Statement>();
 		} else {
-			return statementDao.getStatements(filter);
+			return statementDao.getStatements(filter.getFilterText());
 		}
 	}
 
@@ -44,15 +45,30 @@ public class StatementServiceImpl implements StatementService {
 			if (statement == null) {
 				throw new ItemNotFoundException("statement", id);
 			} else {
+				Hibernate.initialize(statement.getMeta());
 				return statement;
 			}
 		}
 	}
 
 	public Statement saveStatementWithId(Statement statement, int id) {
-		if (statement.getId() == 0 && id != 0) {
-			statement.setId(id);
+		if (statement.getStatementId() == 0 && id != 0) {
+			statement.setStatementId(id);
 		}
 		return saveStatement(statement);
 	}
+
+	public boolean shouldSaveStatement(Statement statement, boolean filter,
+			boolean newStatement) {
+		boolean save = true;
+		if (filter) {
+			// Don't save if not updated nor new item created
+			if (newStatement && statement.getStatement().isEmpty()) {
+				save = false;
+			}
+		}
+
+		return save;
+	}
+
 }

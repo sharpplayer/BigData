@@ -23,10 +23,10 @@
 	<c:set var="actionText">
 		<c:url value='/admin/statements' />
 	</c:set>
-	<c:if test="${statementForm.object.id != 0}">
+	<c:if test="${statementForm.object.statementId != 0}">
 		<c:set var="buttonText">Update</c:set>
 		<c:set var="actionText">
-			<c:url value='/admin/statements/${statementForm.object.id}' />
+			<c:url value='/admin/statements/${statementForm.object.statementId}' />
 		</c:set>
 	</c:if>
 	<h2>Statement Form</h2>
@@ -77,8 +77,8 @@
 		</tr>
 		<c:forEach items="${statements}" var="item">
 			<tr>
-				<td>${item.id}</td>
-				<td><a href="<c:url value='/admin/statements/${item.id}' />">${item.statement}</a></td>
+				<td>${item.statementId}</td>
+				<td><a href="<c:url value='/admin/statements/${item.statementId}' />">${item.statement}</a></td>
 			</tr>
 		</c:forEach>
 	</table>

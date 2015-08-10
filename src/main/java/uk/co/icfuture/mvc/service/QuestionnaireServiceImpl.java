@@ -3,6 +3,7 @@ package uk.co.icfuture.mvc.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +37,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 		}
 
 		for (Question q : questionnaire.getQuestions()) {
-			q.setStatements(statementDao.findStatements(q.getStatements(),
-					false));
+			q.setQuestionStatements(statementDao.findStatements(
+					q.getQuestionStatements(), false));
 		}
 		questionnaire.setQuestions(questionDao.findQuestions(questionnaire
 				.getQuestions()));
@@ -49,7 +50,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 		if (filter.isEmpty()) {
 			return new ArrayList<Questionnaire>();
 		} else {
-			return questionnaireDao.getQuestionnaires(filter);
+			List<Questionnaire> ret = questionnaireDao
+					.getQuestionnaires(filter);
+			for (Questionnaire q : ret) {
+				Hibernate.initialize(q.getQuestions());
+			}
+			return ret;
 		}
 	}
 
@@ -62,6 +68,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 			if (questionnaire == null) {
 				throw new ItemNotFoundException("questionnaire", id);
 			} else {
+				Hibernate.initialize(questionnaire.getQuestions());
 				return questionnaire;
 			}
 		}
@@ -88,6 +95,24 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 					questionDao.getQuestion(questionId));
 		}
 		return questionnaire;
+	}
+
+	@Override
+	public boolean shouldSaveQuestionnaire(Questionnaire questionnaire,
+			boolean nonUpdateSubmit, int insertAt, boolean newQuestionnaire) {
+		boolean save = true;
+		Hibernate.initialize(questionnaire.getQuestions());
+		if (nonUpdateSubmit) {
+			// Don't save if not updated nor new item created
+			if (newQuestionnaire
+					&& (questionnaire.getDescription().isEmpty() || questionnaire
+							.getQuestionText().get(0).isEmpty())) {
+				save = false;
+			}
+		} else if (insertAt != -1) {
+			save = !questionnaire.getDescription().isEmpty();
+		}
+		return save;
 	}
 
 }

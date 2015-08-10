@@ -21,4 +21,7 @@ public interface QuestionnaireService {
 	public Questionnaire insertQuestion(Questionnaire questionnaire, int index,
 			int questionId);
 
+	public boolean shouldSaveQuestionnaire(Questionnaire questionnaire,
+			boolean nonUpdateSubmit, int insertAt, boolean newQuestionnaire);
+
 }

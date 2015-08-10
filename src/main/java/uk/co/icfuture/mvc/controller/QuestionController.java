@@ -96,10 +96,9 @@ public class QuestionController {
 			}
 		}
 
-		boolean save = shouldSaveQuestion(
-				question,
-				request.containsKey("filter") || request.containsKey("preview"),
-				insertAt, true);
+		boolean save = questionService
+				.shouldSaveQuestion(question, request.containsKey("filter")
+						|| request.containsKey("preview"), insertAt, true);
 
 		if (insert != 0) {
 			question = questionService.insertStatement(
@@ -123,13 +122,14 @@ public class QuestionController {
 		populateQuestionModel(question, questionForm, model, redirect);
 		if (save && resultQuestion.hasErrors()) {
 			return "questions";
-		} else if (request.containsKey("preview") && question.getId() != 0) {
-			redirect.addAttribute("id", question.getId());
+		} else if (request.containsKey("preview")
+				&& question.getQuestionId() != 0) {
+			redirect.addAttribute("id", question.getQuestionId());
 			redirect.addAttribute("method", questionForm.getFilter()
 					.getPreviewMethod());
 			return "redirect:/preview/questions/{id}/{method}";
-		} else if (id != question.getId()) {
-			redirect.addAttribute("id", question.getId());
+		} else if (id != question.getQuestionId()) {
+			redirect.addAttribute("id", question.getQuestionId());
 			return "redirect:/admin/questions/{id}";
 		} else {
 			return "questions";
@@ -168,29 +168,5 @@ public class QuestionController {
 		model.addAttribute("questions", questions);
 		model.addAttribute("statements", statements);
 		model.addAttribute("previewList", QuestionFilter.PREVIEW_METHODS);
-	}
-
-	private boolean shouldSaveQuestion(Question question,
-			boolean nonUpdateSubmit, int insertAt, boolean newQuestion) {
-		boolean save = true;
-		if (nonUpdateSubmit) {
-			// Don't save if not updated nor new item created
-			if (newQuestion
-					&& (question.getQuestion().isEmpty() || question
-							.getAnswers().get(0).isEmpty())) {
-				save = false;
-			}
-		} else if (insertAt != -1) {
-			if (insertAt == 0 && !question.getAnswers().get(0).isEmpty()) {
-				save = true;
-			} else if (insertAt == 1 && !question.getQuestion().isEmpty()) {
-				save = true;
-			} else {
-				save = !question.getQuestion().isEmpty()
-						&& !question.getAnswers().get(0).isEmpty();
-			}
-		}
-
-		return save;
 	}
 }

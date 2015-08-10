@@ -7,7 +7,8 @@ import uk.co.icfuture.mvc.form.filter.QuestionFilter;
 import uk.co.icfuture.mvc.model.Question;
 
 public interface QuestionService {
-	public Question saveQuestion(Question question, boolean fromAnswers) throws ItemNotFoundException;
+	public Question saveQuestion(Question question, boolean fromAnswers)
+			throws ItemNotFoundException;
 
 	public Question saveQuestionWithId(Question question, int id,
 			boolean fromAnswers) throws ItemNotFoundException;
@@ -18,4 +19,8 @@ public interface QuestionService {
 
 	public Question insertStatement(Question question, int index,
 			int statementId);
+
+	public boolean shouldSaveQuestion(Question question,
+			boolean nonUpdateSubmit, int insertAt, boolean newQuestion);
+
 }

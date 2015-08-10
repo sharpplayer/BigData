@@ -9,6 +9,6 @@
 <title>Preview</title>
 </head>
 <body>
-Previewing question ${question.id} using method ${method}.
+Previewing question ${question.questionId} using method ${method}.
 </body>
 </html>

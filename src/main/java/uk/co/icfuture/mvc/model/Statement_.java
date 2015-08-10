@@ -10,8 +10,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class Statement_ {
 
 	public static volatile SetAttribute<Statement, Meta> meta;
+	public static volatile SingularAttribute<Statement, Integer> statementId;
 	public static volatile SingularAttribute<Statement, String> statement;
-	public static volatile SingularAttribute<Statement, Integer> id;
 
 }
 

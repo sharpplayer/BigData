@@ -1,5 +1,7 @@
 package uk.co.icfuture.mvc.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,11 +14,13 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "tblmeta")
-public class Meta {
+public class Meta implements Serializable {
+
+	private static final long serialVersionUID = -4842398964185944L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private int metaId;
 
 	@Size(min = 1, max = 50)
 	@Column(unique = true)
@@ -26,17 +30,17 @@ public class Meta {
 	public Meta() {
 	}
 
-	public Meta(int id, String description) {
-		this.id = id;
+	public Meta(int metaId, String description) {
+		this.metaId = metaId;
 		this.description = description;
 	}
 
-	public int getId() {
-		return id;
+	public int getMetaId() {
+		return this.metaId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setMetaId(int metaId) {
+		this.metaId = metaId;
 	}
 
 	public String getDescription() {

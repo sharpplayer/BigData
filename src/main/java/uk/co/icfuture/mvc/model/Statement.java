@@ -1,5 +1,6 @@
 package uk.co.icfuture.mvc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,17 +27,19 @@ import com.google.common.base.Joiner;
 
 @Entity
 @Table(name = "tblstatement")
-public class Statement {
+public class Statement implements Serializable {
+
+	private static final long serialVersionUID = 8898692435410781883L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private int statementId;
 
 	@NotEmpty
 	@Column(unique = true)
 	private String statement = "";
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Meta> meta = new HashSet<Meta>();
 
 	public Statement() {
@@ -47,20 +50,20 @@ public class Statement {
 		this.statement = s;
 	}
 
-	public Statement(int id, String statement, String[] meta) {
-		this.id = id;
+	public Statement(int statementId, String statement, String[] meta) {
+		this.statementId = statementId;
 		this.statement = statement;
 		for (int i = 0; i < meta.length; i++) {
 			this.meta.add(new Meta(i, meta[i]));
 		}
 	}
 
-	public int getId() {
-		return id;
+	public int getStatementId() {
+		return this.statementId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setStatementId(int statementId) {
+		this.statementId = statementId;
 	}
 
 	public String getStatement() {
@@ -111,5 +114,19 @@ public class Statement {
 	@Transient
 	public boolean isEmpty() {
 		return getStatement().isEmpty();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Statement) {
+			Statement s = (Statement) obj;
+			return s.statementId == this.statementId;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return statementId;
 	}
 }

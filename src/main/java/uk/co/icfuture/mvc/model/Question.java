@@ -1,32 +1,42 @@
 package uk.co.icfuture.mvc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import uk.co.icfuture.mvc.utils.Helper;
 
 @Entity
 @Table(name = "tblquestion")
-public class Question {
+public class Question implements Serializable {
+
+	private static final long serialVersionUID = -2607205552884442638L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private int questionId;
 
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "pk.question")
 	@OrderColumn(name = "ordering")
-	private List<Statement> statements = new ArrayList<Statement>();
+	private List<QuestionStatement> questionStatements = new ArrayList<QuestionStatement>();
+
+	@NotEmpty
+	@Column(unique = true)
+	private String description;
 
 	@Transient
 	private ArrayList<String> answers = null;
@@ -36,41 +46,47 @@ public class Question {
 	}
 
 	public Question(String question) {
-		statements.add(new Statement(question));
+		questionStatements.add(new QuestionStatement(this, question));
 	}
 
-	public int getId() {
-		return id;
+	public int getQuestionId() {
+		return questionId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
 	}
 
-	public List<Statement> getStatements() {
-		return statements;
+	public List<QuestionStatement> getQuestionStatements() {
+		return questionStatements;
 	}
 
-	public void setStatements(List<Statement> statements) {
-		Helper.mergeCollection(this.statements, statements, false);
+	public void setQuestionStatements(List<QuestionStatement> questionStatements) {
+		Helper.mergeCollection(this.questionStatements, questionStatements,
+				false);
 		getAnswers();
 	}
 
 	@Transient
 	public String getQuestion() {
-		if (this.statements.size() == 0) {
-			this.statements.add(new Statement());
+		if (this.questionStatements.size() == 0) {
+			this.questionStatements.add(new QuestionStatement(this));
 		}
-		return this.statements.get(0).getStatement();
+		return this.questionStatements.get(0).getStatement().getStatement();
 	}
 
 	public void setQuestion(String question) {
-		if (this.statements.size() > 0) {
-			if (!this.statements.get(0).getStatement().equals(question)) {
-				this.statements.set(0, new Statement(question));
+		if (this.questionStatements.size() > 0) {
+			if (!this.questionStatements.get(0).getStatement().getStatement()
+					.equals(question)) {
+				this.questionStatements.set(0, new QuestionStatement(this,
+						question));
 			}
 		} else {
-			this.statements.add(new Statement(question));
+			this.questionStatements.add(new QuestionStatement(this, question));
+		}
+		if (description.isEmpty()) {
+			description = question;
 		}
 	}
 
@@ -78,13 +94,13 @@ public class Question {
 		if (answers == null) {
 			answers = new ArrayList<String>();
 			boolean question = true;
-			if (this.statements.size() < 2) {
+			if (this.questionStatements.size() < 2) {
 				getQuestion();
-				this.statements.add(new Statement());
+				this.questionStatements.add(new QuestionStatement(this));
 			}
-			for (Statement s : this.statements) {
+			for (QuestionStatement s : this.questionStatements) {
 				if (!question) {
-					this.answers.add(s.getStatement());
+					this.answers.add(s.getStatement().getStatement());
 				}
 				question = false;
 			}
@@ -93,16 +109,51 @@ public class Question {
 	}
 
 	public void copyAnswers() {
-		ArrayList<Statement> all = new ArrayList<Statement>();
-		all.add(this.statements.get(0));
+		ArrayList<QuestionStatement> all = new ArrayList<QuestionStatement>();
+		all.add(this.questionStatements.get(0));
 		for (String s : this.answers) {
 			if (s != null) {
 				if (!s.isEmpty()) {
-					all.add(new Statement(s));
+					all.add(new QuestionStatement(this, s));
 				}
 			}
 		}
-		Helper.mergeCollection(this.statements, all, true);
+		Helper.mergeCollection(this.questionStatements, all, true);
 		this.answers = null;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Transient
+	public String getDescriptionText() {
+		if (this.description == null || this.description.equals(getQuestion())) {
+			return "";
+		} else {
+			return this.description;
+		}
+	}
+
+	public void setDescriptionText(String text) {
+		this.description = text;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Question) {
+			Question q = (Question) obj;
+			return q.questionId == this.questionId;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return questionId;
 	}
 }

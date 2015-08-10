@@ -13,6 +13,8 @@ public class QuestionFilter implements Filter, Serializable {
 
 	private String filterText = "";
 
+	private String descriptionFilterText = "";
+
 	private int selectedAnswer;
 
 	private String previewMethod = "";
@@ -28,7 +30,8 @@ public class QuestionFilter implements Filter, Serializable {
 	}
 
 	public boolean isEmpty() {
-		return this.filterText.isEmpty();
+		return this.filterText.isEmpty()
+				&& this.descriptionFilterText.isEmpty();
 	}
 
 	public StatementFilter getStatementFilter() {
@@ -56,5 +59,13 @@ public class QuestionFilter implements Filter, Serializable {
 
 	public void setPreviewMethod(String previewMethod) {
 		this.previewMethod = previewMethod;
+	}
+
+	public String getDescriptionFilterText() {
+		return descriptionFilterText;
+	}
+
+	public void setDescriptionFilterText(String descriptionFilterText) {
+		this.descriptionFilterText = descriptionFilterText;
 	}
 }

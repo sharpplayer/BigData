@@ -52,7 +52,8 @@ public class StatementController {
 			ModelMap model, RedirectAttributes redirectAtts) {
 
 		Statement statement = statementForm.getObject();
-		boolean save = shouldSaveStatement(statement, filter != null, true);
+		boolean save = statementService.shouldSaveStatement(statement,
+				filter != null, true);
 		if (save) {
 			if (resultStatement.hasErrors()) {
 				return "statements";
@@ -65,7 +66,7 @@ public class StatementController {
 				save ? redirectAtts : null);
 
 		if (save) {
-			redirectAtts.addAttribute("id", statement.getId());
+			redirectAtts.addAttribute("id", statement.getStatementId());
 			return "redirect:/admin/statements/{id}";
 		} else {
 			return "statements";
@@ -80,7 +81,8 @@ public class StatementController {
 			ModelMap model) {
 
 		Statement statement = statementForm.getObject();
-		if (shouldSaveStatement(statement, filter != null, id == 0)) {
+		if (statementService.shouldSaveStatement(statement, filter != null,
+				id == 0)) {
 			if (resultStatement.hasErrors()) {
 				return "statements";
 			}
@@ -116,18 +118,5 @@ public class StatementController {
 		model.addAttribute("statementForm", form);
 		model.addAttribute("statements", statements);
 
-	}
-
-	private boolean shouldSaveStatement(Statement statement, boolean filter,
-			boolean newStatement) {
-		boolean save = true;
-		if (filter) {
-			// Don't save if not updated nor new item created
-			if (newStatement && statement.getStatement().isEmpty()) {
-				save = false;
-			}
-		}
-
-		return save;
 	}
 }

@@ -92,8 +92,8 @@ public class QuestionnaireController {
 			}
 		}
 
-		boolean save = shouldSaveQuestionnaire(questionnaire,
-				request.containsKey("filter"), insertAt, true);
+		boolean save = questionnaireService.shouldSaveQuestionnaire(
+				questionnaire, request.containsKey("filter"), insertAt, true);
 
 		if (insert != 0) {
 			questionnaire = questionnaireService.insertQuestion(
@@ -161,21 +161,4 @@ public class QuestionnaireController {
 		model.addAttribute("questionnaires", questionnaires);
 		model.addAttribute("questions", questions);
 	}
-
-	private boolean shouldSaveQuestionnaire(Questionnaire questionnaire,
-			boolean nonUpdateSubmit, int insertAt, boolean newQuestionnaire) {
-		boolean save = true;
-		if (nonUpdateSubmit) {
-			// Don't save if not updated nor new item created
-			if (newQuestionnaire
-					&& (questionnaire.getDescription().isEmpty() || questionnaire
-							.getQuestionText().get(0).isEmpty())) {
-				save = false;
-			}
-		} else if (insertAt != -1) {
-			save = !questionnaire.getDescription().isEmpty();
-		}
-		return save;
-	}
-
 }

@@ -1,9 +1,11 @@
 package uk.co.icfuture.mvc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,16 +22,20 @@ import uk.co.icfuture.mvc.utils.Helper;
 
 @Entity
 @Table(name = "tblquestionnaire")
-public class Questionnaire {
+public class Questionnaire implements Serializable {
+
+	private static final long serialVersionUID = -7814278571543200515L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@OrderColumn(name = "ordering")
 	private List<Question> questions = new ArrayList<Question>();
 
 	@NotEmpty
+	@Column(unique = true)
 	private String description = "";
 
 	@Transient

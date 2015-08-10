@@ -14,4 +14,8 @@ public interface StatementService {
 	public List<Statement> getStatements(StatementFilter filter);
 
 	public Statement getStatement(int id) throws ItemNotFoundException;
+
+	public boolean shouldSaveStatement(Statement statement, boolean filter,
+			boolean newStatement);
+
 }

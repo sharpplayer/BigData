@@ -5,11 +5,11 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
-@StaticMetamodel(Meta.class)
-public abstract class Meta_ {
+@StaticMetamodel(QuestionStatement.class)
+public abstract class QuestionStatement_ {
 
-	public static volatile SingularAttribute<Meta, Integer> metaId;
-	public static volatile SingularAttribute<Meta, String> description;
+	public static volatile SingularAttribute<QuestionStatement, String> renderHints;
+	public static volatile SingularAttribute<QuestionStatement, QuestionStatementId> pk;
 
 }
 
