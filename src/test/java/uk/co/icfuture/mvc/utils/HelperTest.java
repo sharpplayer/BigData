@@ -24,7 +24,7 @@ public class HelperTest {
 		assertEquals("Array not same length", resList.size(), orgList.size());
 		for (int i = 0; i < resList.size(); i++) {
 			assertEquals("Id's different for index " + i, resList.get(0)
-					.getId(), orgList.get(0).getId());
+					.getMetaId(), orgList.get(0).getMetaId());
 			assertEquals("Text different for index " + i, resList.get(0)
 					.getDescription(), orgList.get(0).getDescription());
 		}
@@ -48,7 +48,7 @@ public class HelperTest {
 				if (m.equals(m2)) {
 					assertEquals(
 							"Id's different for item " + m.getDescription(),
-							m.getId(), m2.getId());
+							m.getMetaId(), m2.getMetaId());
 					tested.add(m2);
 				}
 			}
@@ -69,7 +69,7 @@ public class HelperTest {
 		assertEquals("Array not same length", resList.size(), orgList.size());
 		for (int i = 0; i < resList.size(); i++) {
 			assertEquals("Id's different for index " + i, resList.get(0)
-					.getId(), orgList.get(0).getId());
+					.getMetaId(), orgList.get(0).getMetaId());
 			assertEquals("Text different for index " + i, resList.get(0)
 					.getDescription(), orgList.get(0).getDescription());
 		}
@@ -93,7 +93,7 @@ public class HelperTest {
 				if (m.equals(m2)) {
 					assertEquals(
 							"Id's different for item " + m.getDescription(),
-							m.getId(), m2.getId());
+							m.getMetaId(), m2.getMetaId());
 					tested.add(m2);
 				}
 			}
@@ -114,7 +114,7 @@ public class HelperTest {
 		assertEquals("Array not same length", resList.size(), orgList.size());
 		for (int i = 0; i < resList.size(); i++) {
 			assertEquals("Id's different for index " + i, resList.get(0)
-					.getId(), orgList.get(0).getId());
+					.getMetaId(), orgList.get(0).getMetaId());
 			assertEquals("Text different for index " + i, resList.get(0)
 					.getDescription(), orgList.get(0).getDescription());
 		}

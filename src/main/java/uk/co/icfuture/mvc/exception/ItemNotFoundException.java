@@ -14,6 +14,10 @@ public class ItemNotFoundException extends Exception {
 		super("ItemNotFoundException for item " + itemType + " with id " + id);
 	}
 
+	public ItemNotFoundException(String itemType, String id) {
+		super("ItemNotFoundException for item " + itemType + " with id " + id);
+	}
+
 	public ItemNotFoundException(String itemType, String text, int index) {
 		super("ItemNotFoundException for item " + itemType + " with text '"
 				+ text + "'");

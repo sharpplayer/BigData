@@ -30,7 +30,7 @@ public class Question implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int questionId;
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "pk.question")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pk.question")
 	@OrderColumn(name = "ordering")
 	private List<QuestionStatement> questionStatements = new ArrayList<QuestionStatement>();
 

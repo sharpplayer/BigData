@@ -4,6 +4,7 @@ import java.util.List;
 
 import uk.co.icfuture.mvc.exception.ItemNotFoundException;
 import uk.co.icfuture.mvc.form.filter.QuestionnaireFilter;
+import uk.co.icfuture.mvc.model.Question;
 import uk.co.icfuture.mvc.model.Questionnaire;
 
 public interface QuestionnaireService {
@@ -23,5 +24,7 @@ public interface QuestionnaireService {
 
 	public boolean shouldSaveQuestionnaire(Questionnaire questionnaire,
 			boolean nonUpdateSubmit, int insertAt, boolean newQuestionnaire);
+
+	public Question getNextQuestion(int id);
 
 }

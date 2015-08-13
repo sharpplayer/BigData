@@ -120,8 +120,8 @@ public class QuestionnaireController {
 				redirect);
 		if (save && resultQuestionnaire.hasErrors()) {
 			return "questionnaires";
-		} else if (id != questionnaire.getId()) {
-			redirect.addAttribute("id", questionnaire.getId());
+		} else if (id != questionnaire.getQuestionnaireId()) {
+			redirect.addAttribute("id", questionnaire.getQuestionnaireId());
 			return "redirect:/admin/questionnaires/{id}";
 		} else {
 			return "questionnaires";
@@ -161,4 +161,13 @@ public class QuestionnaireController {
 		model.addAttribute("questionnaires", questionnaires);
 		model.addAttribute("questions", questions);
 	}
+
+	@RequestMapping(value = { "/fill/questionnaires/{id}" }, method = RequestMethod.GET)
+	public String questionnaireFillAction(@PathVariable("id") int id,
+			ModelMap model) {
+		Question question = questionnaireService.getNextQuestion(id);
+		model.put("question", question);
+		return "preview";
+	}
+
 }

@@ -59,6 +59,15 @@ public abstract class AbstractDao<T> {
 		return this.entityManager.createQuery(query).getResultList();
 	}
 
+	public T getItem(String field, String value) {
+		CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<T> query = cb.createQuery(this.genericClass);
+		Root<T> root = query.from(this.genericClass);
+		query.where(cb.equal(root.get(field), value));
+		query.select(root);
+		return this.entityManager.createQuery(query).getSingleResult();
+	}
+
 	public List<T> getFilteredList(String field, String value) {
 		CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = cb.createQuery(this.genericClass);

@@ -77,8 +77,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 	@Override
 	public Questionnaire saveQuestionnaireWithId(Questionnaire questionnaire,
 			int id, boolean fromQText) throws ItemNotFoundException {
-		if (questionnaire.getId() == 0 && id != 0) {
-			questionnaire.setId(id);
+		if (questionnaire.getQuestionnaireId() == 0 && id != 0) {
+			questionnaire.setQuestionnaireId(id);
 		}
 		return saveQuestionnaire(questionnaire, fromQText);
 	}
@@ -113,6 +113,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 			save = !questionnaire.getDescription().isEmpty();
 		}
 		return save;
+	}
+
+	@Override
+	public Question getNextQuestion(int id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

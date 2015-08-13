@@ -28,7 +28,7 @@ public class Questionnaire implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private int questionnaireId;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@OrderColumn(name = "ordering")
@@ -41,12 +41,12 @@ public class Questionnaire implements Serializable {
 	@Transient
 	private ArrayList<String> questionText = null;
 
-	public int getId() {
-		return id;
+	public int getQuestionnaireId() {
+		return this.questionnaireId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setQuestionnaireId(int questionnaireId) {
+		this.questionnaireId = questionnaireId;
 	}
 
 	public List<Question> getQuestions() {

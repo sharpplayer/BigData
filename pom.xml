@@ -12,9 +12,13 @@
 
 	<properties>
 		<springframework.version>4.0.6.RELEASE</springframework.version>
+		<springframework.security.version>4.0.2.RELEASE</springframework.security.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
+		<hibernate.persistence.version>1.0.0.Final</hibernate.persistence.version>
+		<hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
 		<mysql.version>5.1.31</mysql.version>
 		<joda-time.version>2.3</joda-time.version>
+		<log4j.version>1.2.17</log4j.version>
 	</properties>
 
 	<dependencies>
@@ -44,6 +48,16 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${springframework.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${springframework.security.version}</version>
+		</dependency>
 
 		<!-- Hibernate -->
 		<dependency>
@@ -54,7 +68,7 @@
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
-			<version>1.0.0.Final</version>
+			<version>${hibernate.persistence.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -71,7 +85,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.1.2.Final</version>
+			<version>${hibernate.validator.version}</version>
 		</dependency>
 
 		<!-- MySQL -->
@@ -122,6 +136,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
 		</dependency>
 
 		<!-- Testing -->

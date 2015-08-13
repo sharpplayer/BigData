@@ -12,7 +12,7 @@ public class QuestionnaireDaoImpl extends AbstractDao<Questionnaire> implements
 		QuestionnaireDao {
 
 	public Questionnaire saveQuestionnaire(Questionnaire questionnaire) {
-		if (questionnaire.getId() == 0) {
+		if (questionnaire.getQuestionnaireId() == 0) {
 			return persist(questionnaire);
 		} else {
 			return update(questionnaire);

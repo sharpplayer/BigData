@@ -7,9 +7,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -22,9 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "uk.co.icfuture.mvc.configuration" })
-@PropertySource(value = { "classpath:application.properties" })
-public class HibernateConfiguration {
+public class PersistenceConfig {
 
 	@Autowired
 	private Environment environment;
@@ -65,8 +61,8 @@ public class HibernateConfiguration {
 				environment.getRequiredProperty("hibernate.format_sql"));
 		properties.put("hibernate.hbm2ddl.auto",
 				environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
-		properties.put("hibernate.hbm2ddl.import_files",
-				environment.getRequiredProperty("hibernate.hbm2ddl.import_files"));
+		properties.put("hibernate.hbm2ddl.import_files", environment
+				.getRequiredProperty("hibernate.hbm2ddl.import_files"));
 		return properties;
 	}
 
