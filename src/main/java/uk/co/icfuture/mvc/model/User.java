@@ -29,13 +29,16 @@ public class User implements Serializable, UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "userId")
 	private int userId;
 
-	@Column(unique = true)
+	@Column(name = "username", unique = true)
 	private String username;
 
+	@Column(name = "password")
 	private String password;
 
+	@Column(name = "enabled")
 	private boolean enabled;
 
 	@Transient
@@ -47,7 +50,7 @@ public class User implements Serializable, UserDetails {
 	@Transient
 	private boolean credentialNonExpired = true;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
 	private Set<UserRole> userRoles = new HashSet<UserRole>();
 
 	public int getUserId() {

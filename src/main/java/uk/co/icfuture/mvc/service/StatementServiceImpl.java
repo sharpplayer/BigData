@@ -53,7 +53,7 @@ public class StatementServiceImpl implements StatementService {
 
 	public Statement saveStatementWithId(Statement statement, int id) {
 		if (statement.getStatementId() == 0 && id != 0) {
-			statement.setStatementId(id);
+			statement = statementDao.getStatement(id).merge(statement);
 		}
 		return saveStatement(statement);
 	}

@@ -28,18 +28,26 @@ public class Questionnaire implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "questionnaireId")
 	private int questionnaireId;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@OrderColumn(name = "ordering")
 	private List<Question> questions = new ArrayList<Question>();
 
 	@NotEmpty
-	@Column(unique = true)
+	@Column(name = "description", unique = true)
 	private String description = "";
 
 	@Transient
 	private ArrayList<String> questionText = null;
+
+	public Questionnaire merge(Questionnaire questionnaire) {
+		setDescription(questionnaire.getDescription());
+		getQuestionText().clear();
+		getQuestionText().addAll(questionnaire.getQuestionText());
+		return this;
+	}
 
 	public int getQuestionnaireId() {
 		return this.questionnaireId;

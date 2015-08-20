@@ -39,7 +39,9 @@ public class QuestionServiceImpl implements QuestionService {
 	public Question saveQuestionWithId(Question question, int id,
 			boolean fromAnswers) throws ItemNotFoundException {
 		if (question.getQuestionId() == 0 && id != 0) {
-			question.setQuestionId(id);
+			question = questionDao.getQuestion(id).merge(question);
+			Hibernate.initialize(question.getQuestionStatements());
+			fromAnswers = true;
 		}
 		return saveQuestion(question, fromAnswers);
 	}

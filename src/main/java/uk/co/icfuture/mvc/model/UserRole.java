@@ -2,6 +2,7 @@ package uk.co.icfuture.mvc.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,17 +12,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="tbluserrole")
+@Table(name = "tbluserrole")
 public class UserRole implements Serializable {
 
 	private static final long serialVersionUID = 8259784077618628060L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "userRoleId")
 	private int userRoleId;
-	
+
+	@Column(name = "role")
 	private String role;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -22,22 +23,34 @@ public class QuestionStatement implements Serializable {
 	@EmbeddedId
 	private QuestionStatementId pk = new QuestionStatementId();
 
+	@Column(name = "renderHints")
 	private String renderHints = "";
 
 	public QuestionStatement() {
 	}
 
 	public QuestionStatement(Question question) {
-		this(question, "");
+		this(question, "", "");
 	}
 
 	public QuestionStatement(Question question, String statement) {
-		this(question, new Statement(statement));
+		this(question, statement, "");
+	}
+
+	public QuestionStatement(Question question, String statement,
+			String renderHints) {
+		this(question, new Statement(statement), renderHints);
 	}
 
 	public QuestionStatement(Question question, Statement statement) {
+		this(question, statement, "");
+	}
+
+	public QuestionStatement(Question question, Statement statement,
+			String renderHints) {
 		setQuestion(question);
 		setStatement(statement);
+		setRenderHints(renderHints);
 	}
 
 	public QuestionStatementId getPk() {
@@ -76,26 +89,24 @@ public class QuestionStatement implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((pk == null) ? 0 : pk.hashCode());
-		return result;
+		return (getPk() != null ? getPk().hashCode() : 0);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+
+		QuestionStatement qs = (QuestionStatement) obj;
+		if (getPk() != null ? !getPk().equals(qs.getPk()) : qs.getPk() != null) {
 			return false;
-		QuestionStatement other = (QuestionStatement) obj;
-		if (pk == null) {
-			if (other.pk != null)
-				return false;
-		} else if (!pk.equals(other.pk))
-			return false;
+		}
+
 		return true;
 	}
 

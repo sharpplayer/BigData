@@ -78,7 +78,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 	public Questionnaire saveQuestionnaireWithId(Questionnaire questionnaire,
 			int id, boolean fromQText) throws ItemNotFoundException {
 		if (questionnaire.getQuestionnaireId() == 0 && id != 0) {
-			questionnaire.setQuestionnaireId(id);
+			questionnaire = questionnaireDao.getQuestionnaire(id).merge(
+					questionnaire);
 		}
 		return saveQuestionnaire(questionnaire, fromQText);
 	}

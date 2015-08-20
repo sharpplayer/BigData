@@ -105,7 +105,7 @@ public class HelperTest {
 	@Test
 	public void mergeListDeletedItem() {
 		ArrayList<Meta> orgList = new ArrayList<Meta>(Arrays.asList(new Meta(1,
-				"a"), new Meta(2, "b"), new Meta(3, "c")));
+				"a"), new Meta(2, "b"), new Meta(3, "c"), new Meta(4, "d")));
 		ArrayList<Meta> newList = new ArrayList<Meta>(Arrays.asList(new Meta(0,
 				"c"), new Meta(0, "d"), new Meta(0, "a")));
 		Helper.mergeCollection(orgList, newList, true);

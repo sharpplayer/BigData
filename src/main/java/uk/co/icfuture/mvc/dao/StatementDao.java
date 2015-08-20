@@ -17,4 +17,6 @@ public interface StatementDao {
 			List<QuestionStatement> statements, boolean persistNew)
 			throws ItemNotFoundException;
 
+	public Statement getItem(String field, String text);
+
 }

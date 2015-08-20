@@ -37,6 +37,9 @@ public class Helper {
 				}
 				insertAt++;
 			}
+			while (insertAt < collection.size()) {
+				collection.remove(insertAt);
+			}
 		} else {
 			for (T item : updateCollection) {
 				if (!myCollection.contains(item)) {

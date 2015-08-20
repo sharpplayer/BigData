@@ -28,18 +28,22 @@ public class Question implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "questionId", unique = true)
 	private int questionId;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pk.question")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pk.question", orphanRemoval = true)
 	@OrderColumn(name = "ordering")
 	private List<QuestionStatement> questionStatements = new ArrayList<QuestionStatement>();
 
 	@NotEmpty
-	@Column(unique = true)
-	private String description;
+	@Column(name = "description", unique = true)
+	private String description = "";
 
 	@Transient
 	private ArrayList<String> answers = null;
+
+	@Transient
+	private ArrayList<String> answerRenderHints = null;
 
 	public Question() {
 		// TODO Auto-generated constructor stub
@@ -65,6 +69,7 @@ public class Question implements Serializable {
 		Helper.mergeCollection(this.questionStatements, questionStatements,
 				false);
 		getAnswers();
+		getAnswerRenderHints();
 	}
 
 	@Transient
@@ -90,6 +95,21 @@ public class Question implements Serializable {
 		}
 	}
 
+	@Transient
+	public String getQuestionRenderHints() {
+		if (this.questionStatements.size() == 0) {
+			this.questionStatements.add(new QuestionStatement(this));
+		}
+		return this.questionStatements.get(0).getRenderHints();
+	}
+
+	public void setQuestionRenderHints(String hint) {
+		if (this.questionStatements.size() == 0) {
+			getQuestion();
+		}
+		this.questionStatements.get(0).setRenderHints(hint);
+	}
+
 	public List<String> getAnswers() {
 		if (answers == null) {
 			answers = new ArrayList<String>();
@@ -108,18 +128,73 @@ public class Question implements Serializable {
 		return answers;
 	}
 
-	public void copyAnswers() {
-		ArrayList<QuestionStatement> all = new ArrayList<QuestionStatement>();
-		all.add(this.questionStatements.get(0));
-		for (String s : this.answers) {
-			if (s != null) {
-				if (!s.isEmpty()) {
-					all.add(new QuestionStatement(this, s));
+	public List<String> getAnswerRenderHints() {
+		if (answerRenderHints == null) {
+			answerRenderHints = new ArrayList<String>();
+			boolean question = true;
+			if (this.questionStatements.size() < 2) {
+				getQuestion();
+				this.questionStatements.add(new QuestionStatement(this));
+			}
+			for (QuestionStatement s : this.questionStatements) {
+				if (!question) {
+					this.answerRenderHints.add(s.getRenderHints());
 				}
+				question = false;
 			}
 		}
-		Helper.mergeCollection(this.questionStatements, all, true);
-		this.answers = null;
+		return answerRenderHints;
+	}
+
+	public void copyAnswers() {
+		if (this.answers != null) {
+			ArrayList<QuestionStatement> all = new ArrayList<QuestionStatement>();
+			all.add(this.questionStatements.get(0));
+			int index = 0;
+			int renderHintIndex = 0;
+			for (String s : this.answers) {
+				if (s != null) {
+					if (!s.isEmpty()) {
+						QuestionStatement qs = null;
+						for (QuestionStatement qs1 : this.questionStatements) {
+							if (qs1.getStatement().getStatement().equals(s)) {
+								qs = qs1;
+								break;
+							}
+						}
+						if (qs == null) {
+							/*if (this.questionStatements.size() > index + 1) {
+								qs = this.questionStatements.get(index + 1);
+								if (!qs.getStatement().getStatement().equals(s)) {
+									qs.setStatement(new Statement(s));
+								}
+							} else {*/
+								qs = new QuestionStatement(this, s);
+							//}
+						}
+						qs.setRenderHints(this.answerRenderHints
+								.get(renderHintIndex));
+						all.add(qs);
+						index++;
+					}
+				}
+				renderHintIndex++;
+			}
+			Helper.mergeCollection(this.questionStatements, all, true);
+			this.answers = null;
+			this.answerRenderHints = null;
+		}
+	}
+
+	public Question merge(Question question) {
+		setDescription(question.getDescription());
+		setQuestion(question.getQuestion());
+		setQuestionRenderHints(question.getQuestionRenderHints());
+		getAnswers().clear();
+		getAnswers().addAll(question.getAnswers());
+		getAnswerRenderHints().clear();
+		getAnswerRenderHints().addAll(question.getAnswerRenderHints());
+		return this;
 	}
 
 	public String getDescription() {
@@ -141,19 +216,5 @@ public class Question implements Serializable {
 
 	public void setDescriptionText(String text) {
 		this.description = text;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Question) {
-			Question q = (Question) obj;
-			return q.questionId == this.questionId;
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return questionId;
 	}
 }

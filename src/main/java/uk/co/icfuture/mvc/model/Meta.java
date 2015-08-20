@@ -20,10 +20,11 @@ public class Meta implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "metaId")
 	private int metaId;
 
 	@Size(min = 1, max = 50)
-	@Column(unique = true)
+	@Column(name = "description", unique = true)
 	@Type(type = "uk.co.icfuture.mvc.utils.LowerCaseString")
 	private String description;
 

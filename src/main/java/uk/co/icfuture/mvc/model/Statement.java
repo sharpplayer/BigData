@@ -33,13 +33,14 @@ public class Statement implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "statementId", unique = true)
 	private int statementId;
 
 	@NotEmpty
-	@Column(unique = true)
+	@Column(name = "statement", unique = true)
 	private String statement = "";
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<Meta> meta = new HashSet<Meta>();
 
 	public Statement() {
@@ -56,6 +57,12 @@ public class Statement implements Serializable {
 		for (int i = 0; i < meta.length; i++) {
 			this.meta.add(new Meta(i, meta[i]));
 		}
+	}
+
+	public Statement merge(Statement statement) {
+		setStatement(statement.statement);
+		setMetaStrings(statement.getMetaStrings());
+		return this;
 	}
 
 	public int getStatementId() {
@@ -120,13 +127,12 @@ public class Statement implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof Statement) {
 			Statement s = (Statement) obj;
-			return s.statementId == this.statementId;
+			if (s.statement.equals(this.statement)) {
+				return s.statementId == this.statementId;
+			} else {
+				return false;
+			}
 		}
 		return false;
-	}
-	
-	@Override
-	public int hashCode() {
-		return statementId;
 	}
 }

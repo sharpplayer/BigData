@@ -11,7 +11,7 @@ public abstract class Questionnaire_ {
 
 	public static volatile ListAttribute<Questionnaire, Question> questions;
 	public static volatile SingularAttribute<Questionnaire, String> description;
-	public static volatile SingularAttribute<Questionnaire, Integer> id;
+	public static volatile SingularAttribute<Questionnaire, Integer> questionnaireId;
 
 }
 

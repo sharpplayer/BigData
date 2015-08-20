@@ -11,10 +11,10 @@ public class QuestionStatementId implements Serializable {
 	private static final long serialVersionUID = -1004873800317447327L;
 
 	@ManyToOne
-	private Statement statement;
+	private Question question;
 
 	@ManyToOne
-	private Question question;
+	private Statement statement;
 
 	public Question getQuestion() {
 		return question;
@@ -37,9 +37,9 @@ public class QuestionStatementId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((question == null) ? 0 : question.getQuestion().hashCode());
+				+ ((question == null) ? 0 : question.hashCode());
 		result = prime * result
-				+ ((statement == null) ? 0 : statement.getStatement().hashCode());
+				+ ((statement == null) ? 0 : statement.hashCode());
 		return result;
 	}
 
@@ -64,5 +64,4 @@ public class QuestionStatementId implements Serializable {
 			return false;
 		return true;
 	}
-
 }

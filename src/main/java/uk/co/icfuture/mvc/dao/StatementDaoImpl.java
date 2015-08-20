@@ -36,9 +36,9 @@ public class StatementDaoImpl extends AbstractDao<Statement> implements
 		int index = 0;
 		for (QuestionStatement m : statements) {
 			if (m.getStatement().getStatementId() == 0) {
-				List<Statement> l = getList("statement", m.getStatement()
+				Statement l = getItem("statement", m.getStatement()
 						.getStatement());
-				if (l.size() == 0) {
+				if (l == null) {
 					if (persistNew) {
 						m.setStatement(persist(m.getStatement()));
 						ret.add(m);
@@ -47,7 +47,7 @@ public class StatementDaoImpl extends AbstractDao<Statement> implements
 								.getStatement().getStatement(), index);
 					}
 				} else {
-					m.setStatement(l.get(0));
+					m.setStatement(l);
 					ret.add(m);
 				}
 			} else {
