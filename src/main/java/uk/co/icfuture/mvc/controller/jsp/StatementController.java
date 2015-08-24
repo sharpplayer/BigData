@@ -1,4 +1,4 @@
-package uk.co.icfuture.mvc.controller;
+package uk.co.icfuture.mvc.controller.jsp;
 
 import java.util.List;
 
