@@ -12,4 +12,6 @@ public interface MetaDao {
 	public List<Meta> getMetas();
 
 	public Set<Meta> findMetas(Set<Meta> metas);
+	
+	public Meta getMeta(int id);
 }

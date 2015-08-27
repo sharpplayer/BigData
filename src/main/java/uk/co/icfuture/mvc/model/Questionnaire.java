@@ -15,6 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -22,6 +25,8 @@ import uk.co.icfuture.mvc.utils.Helper;
 
 @Entity
 @Table(name = "tblquestionnaire")
+@XmlRootElement(name = "questionnaire")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Questionnaire implements Serializable {
 
 	private static final long serialVersionUID = -7814278571543200515L;

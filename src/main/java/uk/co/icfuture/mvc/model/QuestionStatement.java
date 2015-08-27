@@ -10,12 +10,17 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "tblquestion_tblstatement")
 @AssociationOverrides({
 		@AssociationOverride(name = "pk.question", joinColumns = @JoinColumn(name = "questionId")),
 		@AssociationOverride(name = "pk.statement", joinColumns = @JoinColumn(name = "statementId")) })
+@XmlRootElement(name = "questionstatement")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class QuestionStatement implements Serializable {
 
 	private static final long serialVersionUID = 6771110284644719847L;

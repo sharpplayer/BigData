@@ -17,6 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -27,6 +30,8 @@ import com.google.common.base.Joiner;
 
 @Entity
 @Table(name = "tblstatement")
+@XmlRootElement(name = "statement")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Statement implements Serializable {
 
 	private static final long serialVersionUID = 8898692435410781883L;
@@ -44,7 +49,6 @@ public class Statement implements Serializable {
 	private Set<Meta> meta = new HashSet<Meta>();
 
 	public Statement() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Statement(String s) {

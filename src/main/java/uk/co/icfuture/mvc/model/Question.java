@@ -15,6 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -22,6 +26,8 @@ import uk.co.icfuture.mvc.utils.Helper;
 
 @Entity
 @Table(name = "tblquestion")
+@XmlRootElement(name = "question")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Question implements Serializable {
 
 	private static final long serialVersionUID = -2607205552884442638L;
@@ -40,13 +46,14 @@ public class Question implements Serializable {
 	private String description = "";
 
 	@Transient
+	@XmlTransient
 	private ArrayList<String> answers = null;
 
 	@Transient
+	@XmlTransient
 	private ArrayList<String> answerRenderHints = null;
 
 	public Question() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Question(String question) {
@@ -150,7 +157,6 @@ public class Question implements Serializable {
 		if (this.answers != null) {
 			ArrayList<QuestionStatement> all = new ArrayList<QuestionStatement>();
 			all.add(this.questionStatements.get(0));
-			int index = 0;
 			int renderHintIndex = 0;
 			for (String s : this.answers) {
 				if (s != null) {
@@ -163,19 +169,11 @@ public class Question implements Serializable {
 							}
 						}
 						if (qs == null) {
-							/*if (this.questionStatements.size() > index + 1) {
-								qs = this.questionStatements.get(index + 1);
-								if (!qs.getStatement().getStatement().equals(s)) {
-									qs.setStatement(new Statement(s));
-								}
-							} else {*/
-								qs = new QuestionStatement(this, s);
-							//}
+							qs = new QuestionStatement(this, s);
 						}
 						qs.setRenderHints(this.answerRenderHints
 								.get(renderHintIndex));
 						all.add(qs);
-						index++;
 					}
 				}
 				renderHintIndex++;

@@ -40,4 +40,9 @@ public class MetaDaoImpl extends AbstractDao<Meta> implements MetaDao {
 		return ret;
 	}
 
+	@Override
+	public Meta getMeta(int id) {
+		return getItemById(id);
+	}
+
 }

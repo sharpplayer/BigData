@@ -9,11 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "tblmeta")
+@XmlRootElement(name = "meta")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Meta implements Serializable {
 
 	private static final long serialVersionUID = -4842398964185944L;

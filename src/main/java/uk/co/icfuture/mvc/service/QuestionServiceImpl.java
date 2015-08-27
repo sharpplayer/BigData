@@ -85,6 +85,9 @@ public class QuestionServiceImpl implements QuestionService {
 				throw new ItemNotFoundException("question", id);
 			} else {
 				Hibernate.initialize(question.getQuestionStatements());
+				for (QuestionStatement qs : question.getQuestionStatements()) {
+					Hibernate.initialize(qs.getStatement().getMeta());
+				}
 				return question;
 			}
 		}

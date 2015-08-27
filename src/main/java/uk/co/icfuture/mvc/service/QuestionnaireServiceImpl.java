@@ -118,7 +118,6 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
 	@Override
 	public Question getNextQuestion(int id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

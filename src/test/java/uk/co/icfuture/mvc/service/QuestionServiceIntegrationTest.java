@@ -1,8 +1,20 @@
 package uk.co.icfuture.mvc.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Ignore;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
+
+import org.eclipse.persistence.jaxb.MarshallerProperties;
+import org.eclipse.persistence.jaxb.UnmarshallerProperties;
+import org.eclipse.persistence.oxm.MediaType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +24,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.model.ObjectFactory;
 import uk.co.icfuture.mvc.model.Question;
+import uk.co.icfuture.mvc.utils.Helper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -38,14 +52,12 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	@Ignore
 	public void saveQuestionWithIdTest() throws ItemNotFoundException {
 		int id = 1;
 		questionService.saveQuestionWithId(getQuestion(false), id, true);
 	}
 
 	@Test
-	@Ignore
 	public void saveQuestionWithIdRemoveTest() throws ItemNotFoundException {
 		int id = 1;
 		Question q = getQuestion(true);
@@ -60,7 +72,6 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	@Ignore
 	public void appendStatementAndSaveTest() throws ItemNotFoundException {
 		int id = 1;
 		Question q = getQuestion(false);
@@ -82,4 +93,67 @@ public class QuestionServiceIntegrationTest extends
 				.size());
 	}
 
+	@Test
+	public void xmlSerialization() throws ItemNotFoundException, JAXBException {
+		int id = 1;
+		Question q = questionService.getQuestion(id);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		serialize(q, os, MediaType.APPLICATION_XML);
+	}
+
+	@Test
+	public void xmlDeserialization() throws ItemNotFoundException,
+			JAXBException {
+
+		int id = 1;
+		Question q = questionService.getQuestion(id);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		serialize(q, os, MediaType.APPLICATION_XML);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+		JAXBContext jc = getJaxbContext();
+		Unmarshaller u = jc.createUnmarshaller();
+		q = Helper.uncheckedCast(u.unmarshal(is));
+	}
+
+	@Test
+	public void jsonSerialization() throws ItemNotFoundException, JAXBException {
+		int id = 1;
+		Question q = questionService.getQuestion(id);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		serialize(q, os, MediaType.APPLICATION_JSON);
+	}
+
+	@Test
+	public void jsonDeserialization() throws ItemNotFoundException,
+			JAXBException {
+
+		int id = 1;
+		Question q = questionService.getQuestion(id);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		serialize(q, os, MediaType.APPLICATION_JSON);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+		JAXBContext jc = getJaxbContext();
+		Unmarshaller u = jc.createUnmarshaller();
+		u.setProperty(UnmarshallerProperties.MEDIA_TYPE,
+				MediaType.APPLICATION_JSON);
+		q = Helper.uncheckedCast(u.unmarshal(is));
+	}
+
+	private void serialize(Question q, ByteArrayOutputStream os,
+			MediaType mediaType) throws JAXBException {
+		JAXBContext jc = getJaxbContext();
+		JAXBElement<Question> q2 = new JAXBElement<Question>(new QName(
+				"question"), Question.class, q);
+		Marshaller m = jc.createMarshaller();
+		m.setProperty(MarshallerProperties.MEDIA_TYPE, mediaType);
+		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.marshal(q2, os);
+	}
+
+	private JAXBContext getJaxbContext() throws JAXBException {
+		return JAXBContext.newInstance("uk.co.icfuture.mvc.model",
+				ObjectFactory.class.getClassLoader());
+	}
 }
