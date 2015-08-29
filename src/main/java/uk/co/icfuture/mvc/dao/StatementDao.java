@@ -2,7 +2,7 @@ package uk.co.icfuture.mvc.dao;
 
 import java.util.List;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.model.QuestionStatement;
 import uk.co.icfuture.mvc.model.Statement;
 
@@ -15,7 +15,7 @@ public interface StatementDao {
 
 	public List<QuestionStatement> findStatements(
 			List<QuestionStatement> statements, boolean persistNew)
-			throws ItemNotFoundException;
+			throws ResourceNotFoundException;
 
 	public Statement getItem(String field, String text);
 

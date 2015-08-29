@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.form.StatementForm;
 import uk.co.icfuture.mvc.form.filter.StatementFilter;
 import uk.co.icfuture.mvc.model.Statement;
@@ -33,13 +33,13 @@ public class StatementController {
 	}
 
 	@RequestMapping(value = { "/admin/statements" }, method = RequestMethod.GET)
-	public String statementsAction(ModelMap model) throws ItemNotFoundException {
+	public String statementsAction(ModelMap model) throws ResourceNotFoundException {
 		return statementsAction(0, model);
 	}
 
 	@RequestMapping(value = { "/admin/statements/{id}" }, method = RequestMethod.GET)
 	public String statementsAction(@PathVariable("id") int id, ModelMap model)
-			throws ItemNotFoundException {
+			throws ResourceNotFoundException {
 		populateStatementModel(statementService.getStatement(id), null, model,
 				null);
 		return "statements";

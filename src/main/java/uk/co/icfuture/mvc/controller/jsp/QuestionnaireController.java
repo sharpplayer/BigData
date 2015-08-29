@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.form.QuestionnaireForm;
 import uk.co.icfuture.mvc.form.filter.QuestionnaireFilter;
 import uk.co.icfuture.mvc.model.Question;
@@ -44,13 +44,13 @@ public class QuestionnaireController {
 
 	@RequestMapping(value = { "/admin/questionnaires" }, method = RequestMethod.GET)
 	public String questionnairesAction(ModelMap model)
-			throws ItemNotFoundException {
+			throws ResourceNotFoundException {
 		return questionnairesAction(0, model);
 	}
 
 	@RequestMapping(value = { "/admin/questionnaires/{id}" }, method = RequestMethod.GET)
 	public String questionnairesAction(@PathVariable("id") int id,
-			ModelMap model) throws ItemNotFoundException {
+			ModelMap model) throws ResourceNotFoundException {
 		populateQuestionnaireModel(questionnaireService.getQuestionnaire(id),
 				null, model, null);
 		return "questionnaires";
@@ -108,7 +108,7 @@ public class QuestionnaireController {
 							.saveQuestionnaireWithId(
 									questionnaireForm.getObject(), id,
 									insert == 0);
-				} catch (ItemNotFoundException e) {
+				} catch (ResourceNotFoundException e) {
 					resultQuestionnaire.rejectValue(
 							"object.questionText[" + e.getIndex() + "]",
 							"question.notfound", e.getMessage());

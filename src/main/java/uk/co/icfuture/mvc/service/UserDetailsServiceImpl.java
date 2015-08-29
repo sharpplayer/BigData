@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throws UsernameNotFoundException {
 		try {
 			return userService.getUser(username);
-		} catch (ItemNotFoundException e) {
+		} catch (ResourceNotFoundException e) {
 			throw new UsernameNotFoundException("User " + username
 					+ " not found");
 		}

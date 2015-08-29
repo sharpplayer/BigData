@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.icfuture.mvc.dao.MetaDao;
 import uk.co.icfuture.mvc.dao.StatementDao;
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.form.filter.StatementFilter;
 import uk.co.icfuture.mvc.model.Statement;
 
@@ -37,13 +37,13 @@ public class StatementServiceImpl implements StatementService {
 		}
 	}
 
-	public Statement getStatement(int id) throws ItemNotFoundException {
+	public Statement getStatement(int id) throws ResourceNotFoundException {
 		if (id == 0) {
 			return new Statement();
 		} else {
 			Statement statement = statementDao.getStatement(id);
 			if (statement == null) {
-				throw new ItemNotFoundException("statement", id);
+				throw new ResourceNotFoundException("statement", id);
 			} else {
 				Hibernate.initialize(statement.getMeta());
 				return statement;

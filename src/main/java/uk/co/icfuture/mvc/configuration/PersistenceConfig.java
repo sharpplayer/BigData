@@ -63,6 +63,8 @@ public class PersistenceConfig {
 				environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.hbm2ddl.import_files", environment
 				.getRequiredProperty("hibernate.hbm2ddl.import_files"));
+		properties.put("jadira.usertype.autoRegisterUserTypes", environment
+				.getRequiredProperty("jadira.usertype.autoRegisterUserTypes"));
 		return properties;
 	}
 

@@ -13,12 +13,14 @@
 	<properties>
 		<springframework.version>4.1.2.RELEASE</springframework.version>
 		<springframework.security.version>4.0.2.RELEASE</springframework.security.version>
+		<springframework.security.taglib.version>4.0.1.RELEASE</springframework.security.taglib.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<hibernate.persistence.version>1.0.0.Final</hibernate.persistence.version>
 		<hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
 		<mysql.version>5.1.31</mysql.version>
 		<joda-time.version>2.3</joda-time.version>
 		<log4j.version>1.2.17</log4j.version>
+		<jadira.version>3.2.0.GA</jadira.version>
 		<javax.el.version>2.2.4</javax.el.version>
 		<jersey.version>2.21</jersey.version>
 		<jersey-core.version>2.21</jersey-core.version>
@@ -63,6 +65,13 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${springframework.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${springframework.security.taglib.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -133,7 +142,12 @@
 		<dependency>
 			<groupId>org.jadira.usertype</groupId>
 			<artifactId>usertype.core</artifactId>
-			<version>3.0.0.CR1</version>
+			<version>${jadira.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.extended</artifactId>
+			<version>${jadira.version}</version>
 		</dependency>
 
 		<!-- Servlet+JSP+JSTL -->

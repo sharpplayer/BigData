@@ -7,7 +7,7 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.model.Question;
 
 @Repository("questionDao")
@@ -43,7 +43,7 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements
 
 	@Override
 	public List<Question> findQuestions(List<Question> questions)
-			throws ItemNotFoundException {
+			throws ResourceNotFoundException {
 		ArrayList<Question> ret = new ArrayList<Question>();
 		int index = 0;
 		for (Question m : questions) {
@@ -63,7 +63,7 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements
 					}
 				}
 				if (!added) {
-					throw new ItemNotFoundException("question",
+					throw new ResourceNotFoundException("question",
 							m.getQuestion(), index);
 				}
 			} else {

@@ -2,7 +2,7 @@ package uk.co.icfuture.mvc.dao;
 
 import java.util.List;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.model.Question;
 
 public interface QuestionDao {
@@ -15,6 +15,6 @@ public interface QuestionDao {
 	public Question getQuestion(int question);
 
 	public List<Question> findQuestions(List<Question> questions)
-			throws ItemNotFoundException;
+			throws ResourceNotFoundException;
 
 }

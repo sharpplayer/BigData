@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.model.ObjectFactory;
 import uk.co.icfuture.mvc.model.Question;
 import uk.co.icfuture.mvc.utils.Helper;
@@ -52,13 +52,13 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void saveQuestionWithIdTest() throws ItemNotFoundException {
+	public void saveQuestionWithIdTest() throws ResourceNotFoundException {
 		int id = 1;
 		questionService.saveQuestionWithId(getQuestion(false), id, true);
 	}
 
 	@Test
-	public void saveQuestionWithIdRemoveTest() throws ItemNotFoundException {
+	public void saveQuestionWithIdRemoveTest() throws ResourceNotFoundException {
 		int id = 1;
 		Question q = getQuestion(true);
 		questionService.saveQuestionWithId(q, id, true);
@@ -72,7 +72,7 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void appendStatementAndSaveTest() throws ItemNotFoundException {
+	public void appendStatementAndSaveTest() throws ResourceNotFoundException {
 		int id = 1;
 		Question q = getQuestion(false);
 		q = questionService.insertStatement(q, 2, 2);
@@ -83,7 +83,7 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void insertStatementAndSaveTest() throws ItemNotFoundException {
+	public void insertStatementAndSaveTest() throws ResourceNotFoundException {
 		int id = 1;
 		Question q = getQuestion(false);
 		q = questionService.insertStatement(q, 1, 2);
@@ -94,7 +94,7 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void xmlSerialization() throws ItemNotFoundException, JAXBException {
+	public void xmlSerialization() throws ResourceNotFoundException, JAXBException {
 		int id = 1;
 		Question q = questionService.getQuestion(id);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -102,7 +102,7 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void xmlDeserialization() throws ItemNotFoundException,
+	public void xmlDeserialization() throws ResourceNotFoundException,
 			JAXBException {
 
 		int id = 1;
@@ -117,7 +117,7 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void jsonSerialization() throws ItemNotFoundException, JAXBException {
+	public void jsonSerialization() throws ResourceNotFoundException, JAXBException {
 		int id = 1;
 		Question q = questionService.getQuestion(id);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -125,7 +125,7 @@ public class QuestionServiceIntegrationTest extends
 	}
 
 	@Test
-	public void jsonDeserialization() throws ItemNotFoundException,
+	public void jsonDeserialization() throws ResourceNotFoundException,
 			JAXBException {
 
 		int id = 1;

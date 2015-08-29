@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.icfuture.mvc.dao.MetaDao;
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.model.Meta;
 
 @Service("metaService")
@@ -26,13 +26,13 @@ public class MetaServiceImpl implements MetaService {
 	}
 
 	@Override
-	public Meta getMeta(int id) throws ItemNotFoundException {
+	public Meta getMeta(int id) throws ResourceNotFoundException {
 		if (id == 0) {
 			return new Meta();
 		} else {
 			Meta meta = metaDao.getMeta(id);
 			if (meta == null) {
-				throw new ItemNotFoundException("meta", id);
+				throw new ResourceNotFoundException("meta", id);
 			} else {
 				return meta;
 			}

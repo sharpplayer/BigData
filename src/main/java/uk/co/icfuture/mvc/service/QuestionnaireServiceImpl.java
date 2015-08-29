@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.icfuture.mvc.dao.QuestionDao;
 import uk.co.icfuture.mvc.dao.QuestionnaireDao;
 import uk.co.icfuture.mvc.dao.StatementDao;
-import uk.co.icfuture.mvc.exception.ItemNotFoundException;
+import uk.co.icfuture.mvc.exception.ResourceNotFoundException;
 import uk.co.icfuture.mvc.form.filter.QuestionnaireFilter;
 import uk.co.icfuture.mvc.model.Question;
 import uk.co.icfuture.mvc.model.Questionnaire;
@@ -31,7 +31,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
 	@Override
 	public Questionnaire saveQuestionnaire(Questionnaire questionnaire,
-			boolean fromQText) throws ItemNotFoundException {
+			boolean fromQText) throws ResourceNotFoundException {
 		if (fromQText) {
 			questionnaire.copyQuestionText();
 		}
@@ -60,13 +60,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 	}
 
 	@Override
-	public Questionnaire getQuestionnaire(int id) throws ItemNotFoundException {
+	public Questionnaire getQuestionnaire(int id) throws ResourceNotFoundException {
 		if (id == 0) {
 			return new Questionnaire();
 		} else {
 			Questionnaire questionnaire = questionnaireDao.getQuestionnaire(id);
 			if (questionnaire == null) {
-				throw new ItemNotFoundException("questionnaire", id);
+				throw new ResourceNotFoundException("questionnaire", id);
 			} else {
 				Hibernate.initialize(questionnaire.getQuestions());
 				return questionnaire;
@@ -76,7 +76,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
 	@Override
 	public Questionnaire saveQuestionnaireWithId(Questionnaire questionnaire,
-			int id, boolean fromQText) throws ItemNotFoundException {
+			int id, boolean fromQText) throws ResourceNotFoundException {
 		if (questionnaire.getQuestionnaireId() == 0 && id != 0) {
 			questionnaire = questionnaireDao.getQuestionnaire(id).merge(
 					questionnaire);

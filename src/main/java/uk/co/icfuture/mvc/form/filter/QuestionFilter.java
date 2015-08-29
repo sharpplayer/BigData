@@ -9,7 +9,7 @@ public class QuestionFilter implements Filter, Serializable {
 	private static final long serialVersionUID = 578871347869090794L;
 
 	public static final List<String> PREVIEW_METHODS = Arrays.asList("single",
-			"multiple");
+			"multiple", "ordered");
 
 	private String filterText = "";
 
